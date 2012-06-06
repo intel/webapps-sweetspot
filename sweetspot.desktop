@@ -1,0 +1,14 @@
+
+[Desktop Entry]
+Version=1.0
+Name=Sweet Spot
+Comment=A HTML5-based 4 piece alignment game
+GenericName=Sweet Spot
+Exec=chromium-browser --enable-plugins --enable-extensions --enable-user-scripts --enable-printing --enable-sync --use-gl=egl --ignore-gpu-blacklist --auto-ssl-client-auth %U --app-id=djfbielnigpphgljmaciejpbbdcmfikm --load-extension=/usr/share/sweetspot/ --no-first-run
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=sweetspot
+Categories=Game;
+StartupWMClass=Chromium
+StartupNotify=true
