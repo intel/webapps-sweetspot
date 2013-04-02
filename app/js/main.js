@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2012, Intel Corporation.
  *
- * This program is licensed under the terms and conditions of the 
+ * This program is licensed under the terms and conditions of the
  * Apache License, version 2.0.  The full text of the Apache License is at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -133,17 +133,18 @@ Game = {};
     }
 
     function gamesound(file) {
-        this.file = file;
-        this.soundobj = new Array();
-        this.soundobj.push(new Audio(file));
-        this.soundobj.push(new Audio(file));
-        this.idx = 0;
-        this.play = function play() {
-            /* create two instances of the file to play sequentially if calls */
-            /* come too fast, otherwise the second call will be ignored */
-            this.soundobj[this.idx].play();
-            this.idx = (this.idx + 1)%2;
-        };
+      this.soundobj = new Audio(file);
+      this.isPlaying = false;
+      this.play = function () {
+        if (this.isPlaying) {
+          this.soundobj.pause();
+          this.soundobj.currentTime = 0;
+          this.isPlaying = false;
+        }
+
+        this.soundobj.play();
+        this.isPlaying = true;
+      };
     }
 
     function settype(type) {
@@ -575,11 +576,15 @@ Game = {};
         test_player_ready();
     }
 
+    // we can load sounds before the DOM is ready
+    Game.move_sound = new gamesound("audio/GamePiece.ogg");
+    Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
+    Game.select_sound = new gamesound("audio/Select.ogg");
+    Game.win_sound = new gamesound("audio/Winner.ogg");
+
     $(document).ready(function()
     {
         /* initialization */
-        license_init("license", "intro_page");
-        help_init("main_help", "help_");
         Game.player1name = "";
         Game.player2name = "";
         Game.computer = false;
@@ -593,10 +598,6 @@ Game = {};
         Game.movecomplete = movecomplete;
         Game.game_over = game_over;
         Game.start_new = start_new;
-        Game.move_sound = new gamesound("audio/GamePiece.wav");
-        Game.menunav_sound = new gamesound("audio/MenuNavigation.wav");
-        Game.select_sound = new gamesound("audio/Select.wav");
-        Game.win_sound = new gamesound("audio/Winner.wav");
 
         if (window.chrome&&window.chrome.i18n)
         {
@@ -625,8 +626,7 @@ Game = {};
         }
 
         /* intro page interaction */
-
-        $("#intro_playbutton").click(function() { 
+        $("#intro_playbutton").click(function() {
             selectsnd();
             $("#intro_page").hide();
             $("#players_page").show();
@@ -652,7 +652,7 @@ Game = {};
         p1name.onchange = player1namechange;
         p2name.onchange = player2namechange;
 
-        $("#player_nextbutton").click(function() { 
+        $("#player_nextbutton").click(function() {
             if($("#player_nextbutton").hasClass("active_button"))
             {
                 selectsnd();
@@ -663,7 +663,7 @@ Game = {};
 
         /* game type page interaction */
 
-        $("#type_startbutton").click(function() { 
+        $("#type_startbutton").click(function() {
             if($("#type_startbutton").hasClass("active_button"))
             {
                 selectsnd();
@@ -723,6 +723,8 @@ Game = {};
         $('#win_playagain_text').click(function() {restart_game()});
         $('#win_startover_text').click(function() {end_game()});
 
+        license_init("license", "intro_page");
+        help_init("main_help", "help_");
         init_game();
     });
 })()
