@@ -765,10 +765,7 @@
     };
 
     // we can load sounds before the DOM is ready
-    Game.move_sound = new gamesound("audio/GamePiece.ogg");
-    Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
     Game.select_sound = new gamesound("audio/Select.ogg");
-    Game.win_sound = new gamesound("audio/Winner.ogg");
 
     // set up initial page
     $(document).ready(function() {
@@ -803,6 +800,12 @@
         gamePage();
         license_init("license", "intro_page");
         help_init("main_help", "help_");
+
+        // load remaining sounds
+        Game.move_sound = new gamesound("audio/GamePiece.ogg");
+        Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
+        Game.win_sound = new gamesound("audio/Winner.ogg");
+
         storage.save();
       });
     });
