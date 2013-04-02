@@ -7,10 +7,85 @@
  *
  */
 
-Game = {};
 
 (function () {
+    Game = {};
+
     var numtext = ["0", "1", "2", "3", "4", "5"];
+
+    var Storage = function () {
+      var obj = {};
+      var localStorageIndex = 'sweetspot_game_data';
+
+      var data = {
+        'gametype': null,
+        'player1Name': null,
+        'player2Name': null,
+        'player1Color': null,
+        'player2Color': null
+      };
+
+      obj.save = function () {
+        var str = JSON.stringify(data);
+        localStorage.setItem(localStorageIndex, str);
+      };
+
+      obj.load = function () {
+        var str = localStorage.getItem(localStorageIndex);
+        if (str) {
+          data = JSON.parse(str);
+        }
+      };
+
+      var set = function (key, value) {
+        data[key] = value;
+      };
+
+      obj.setGameType = function (type) {
+        set('gametype', type);
+      };
+
+      obj.getGameType = function (type) {
+        return data.gametype;
+      };
+
+      obj.setPlayer1Color = function (color) {
+        set('player1Color', color);
+      };
+
+      obj.setPlayer2Color = function (color) {
+        set('player2Color', color);
+      };
+
+      obj.getPlayer1Color = function () {
+        return data.player1Color;
+      };
+
+      obj.getPlayer2Color = function () {
+        return data.player2Color;
+      };
+
+      obj.setPlayer1Name = function (name) {
+        set('player1Name', name);
+      };
+
+      obj.setPlayer2Name = function (name) {
+        set('player2Name', name);
+      };
+
+      obj.getPlayer1Name = function () {
+        return data.player1Name;
+      };
+
+      obj.getPlayer2Name = function () {
+        return data.player2Name;
+      };
+
+      return obj;
+    };
+
+    var storage = Storage();
+    storage.load();
 
     function GameData() {
         this.array = [[-1, -1, -1, -1, -1, -1],
@@ -152,7 +227,7 @@ Game = {};
                     "#type_bestoffive"];
 
         Game.gametype = type;
-        localStorage.setItem("sweetspot_gametype", type);
+        storage.setGameType(type);
 
         for(var i = 0; i < 3; i++)
         {
@@ -182,12 +257,12 @@ Game = {};
         if(player == 1)
         {
             Game.playercolor[0] = tgt;
-            localStorage.setItem("sweetspot_player1_color", tgt);
+            storage.setPlayer1Color(tgt);
         }
         else
         {
             Game.playercolor[1] = tgt;
-            localStorage.setItem("sweetspot_player2_color", tgt);
+            storage.setPlayer2Color(tgt);
         }
 
         for(var i = 0; i < 4; i++)
@@ -235,47 +310,31 @@ Game = {};
     }
 
     function init_game() {
-        if(localStorage.getItem("sweetspot_player1"))
-            Game.player1name = localStorage.getItem("sweetspot_player1");
-        else
-            Game.player1name = "Player1";
+      Game.player1name = storage.getPlayer1Name() || "Player1";
+      Game.player2name = storage.getPlayer2Name() || "Player2";
 
-        if(localStorage.getItem("sweetspot_player2"))
-            Game.player2name = localStorage.getItem("sweetspot_player2");
-        else
-            Game.player2name = "Player2";
+      var player1Color = storage.getPlayer1Color() || 2;
+      setcolor(1, player1Color);
 
-        $('#player1name').val(Game.player1name);
-        $('#player2name').val(Game.player2name);
+      var player2Color = storage.getPlayer1Color() || 3;
+      setcolor(2, player2Color);
 
-        if(localStorage.getItem("sweetspot_player1_color"))
-            setcolor(1, parseInt(localStorage.getItem("sweetspot_player1_color")));
-        else
-            setcolor(1, 2);
-
-        if(localStorage.getItem("sweetspot_player2_color"))
-            setcolor(2, parseInt(localStorage.getItem("sweetspot_player2_color")));
-        else
-            setcolor(2, 3);
-
-        if(localStorage.getItem("sweetspot_gametype"))
-            settype(parseInt(localStorage.getItem("sweetspot_gametype")));
-        else
-            settype(0);
+      var gametype = storage.getGameType() || 0;
+      settype(gametype);
     }
 
     function ignore_user_input() {
-        Game.ignore_input = true;
+      Game.ignore_input = true;
     }
 
     function enable_user_input() {
-        Game.ignore_input = false;
+      Game.ignore_input = false;
     }
 
     /* this represents a user making a move by clicking a column */
     function startmove(column, computer) {
         /* if we're in the middle of an animation, do nothing */
-        if(Game.ignore_input&&(computer!==true))
+        if (Game.ignore_input&&(computer!==true))
             return;
 
         updateselector(column);
@@ -566,13 +625,15 @@ Game = {};
 
     function player1namechange() {
         Game.player1name = $('#player1name').val();
-        localStorage.setItem("sweetspot_player1", Game.player1name);
+        storage.setPlayer1Name(Game.player1name);
+        storage.save();
         test_player_ready();
     }
 
     function player2namechange() {
         Game.player2name = $('#player2name').val();
-        localStorage.setItem("sweetspot_player2", Game.player2name);
+        storage.setPlayer2Name(Game.player2name);
+        storage.save();
         test_player_ready();
     }
 
@@ -612,6 +673,9 @@ Game = {};
     };
 
     var playerPage = function () {
+      $('#player1name').val(Game.player1name);
+      $('#player2name').val(Game.player2name);
+
       $('#player_player1orange').mousedown(function() {navsnd();setcolor(1, 0);});
       $('#player_player1red').mousedown(function() {navsnd();setcolor(1, 1);});
       $('#player_player1blue').mousedown(function() {navsnd();setcolor(1, 2);});
@@ -739,6 +803,7 @@ Game = {};
         gamePage();
         license_init("license", "intro_page");
         help_init("main_help", "help_");
+        storage.save();
       });
     });
 })()
