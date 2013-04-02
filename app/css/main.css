@@ -369,7 +369,7 @@ input:focus {
     height: 85px;
 }
 
-.pickred {
+.pick.red {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -377,7 +377,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-red.png) no-repeat;
 }
 
-.pickblue {
+.pick.blue {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -385,7 +385,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-blue.png) no-repeat;
 }
 
-.pickgreen {
+.pick.green {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -393,7 +393,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-green.png) no-repeat;
 }
 
-.pickorange {
+.pick.orange {
     position: absolute;
     width: 85px;
     height: 85px;

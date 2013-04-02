@@ -9,7 +9,7 @@
 
 
 (function () {
-    Game = {};
+    var Game = {};
 
     var numtext = ["0", "1", "2", "3", "4", "5"];
 
@@ -676,14 +676,16 @@
       $('#player1name').val(Game.player1name);
       $('#player2name').val(Game.player2name);
 
-      $('#player_player1orange').mousedown(function() {navsnd();setcolor(1, 0);});
-      $('#player_player1red').mousedown(function() {navsnd();setcolor(1, 1);});
-      $('#player_player1blue').mousedown(function() {navsnd();setcolor(1, 2);});
-      $('#player_player1green').mousedown(function() {navsnd();setcolor(1, 3);});
-      $('#player_player2orange').mousedown(function() {navsnd();setcolor(2, 0);});
-      $('#player_player2red').mousedown(function() {navsnd();setcolor(2, 1);});
-      $('#player_player2blue').mousedown(function() {navsnd();setcolor(2, 2);});
-      $('#player_player2green').mousedown(function() {navsnd();setcolor(2, 3);});
+      $('#players_page').delegate('.pick', 'mousedown', function (e) {
+        var elt = $(e.target);
+
+        navsnd();
+
+        var player = parseInt(elt.attr('data-player'));
+        var color = parseInt(elt.attr('data-color'));
+
+        setcolor(player, color);
+      });
 
       var p1name = document.getElementById("player1name");
       var p2name = document.getElementById("player2name");
