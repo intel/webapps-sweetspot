@@ -46,6 +46,7 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/app/' },
           { expand: true, cwd: '.', src: ['icon*.png'], dest: 'build/app/' },
+          { expand: true, cwd: '.', src: ['README.txt'], dest: 'build/app/' },
           { expand: true, cwd: '.', src: ['app/**.html'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/audio/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/fonts/**'], dest: 'build/' },
@@ -93,7 +94,8 @@ module.exports = function (grunt) {
             'app/_locales/**',
             'app/fonts/**',
             'app/lib/**',
-            '*.png'
+            '*.png',
+            'README.txt'
           ]
         }
       }
