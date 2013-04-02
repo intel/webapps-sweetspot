@@ -10,19 +10,32 @@
 <html>
 <head>
     <meta id="viewport_meta" name="viewport" content="" />
-    <script type="text/javascript">
-        var viewport_meta = document.getElementById('viewport_meta');
-        var w = (screen.orientation.indexOf("portrait") == 0)?screen.availWidth:screen.availHeight;
-        viewport_meta.setAttribute('content','width='+w+', user-scalable=no');
+    <script>
+    // figure out the "real" device width (screen.width);
+    var deviceWidth = screen.width;
+
+    // figure out the layout viewport width (document.documentElement.clientWidth)
+    var layoutViewportWidth = document.documentElement.clientWidth;
+
+    // work out the ratio between them
+    var scale = layoutViewportWidth / deviceWidth;
+
+    // for the viewport tag, set width=<device width> and
+    // scale=<layout viewport width> / <device width>
+    var content = 'width=' + deviceWidth + ', initial-scale=' + scale +
+                  ', maximum-scale=' + scale + ', minimum-scale=' + scale;
+
+    var viewportMeta = document.getElementById('viewportMeta');
+    viewportMeta.setAttribute('content', content);
     </script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Sweet Spot</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css"></link>
-    <link rel="stylesheet" type="text/css" href="css/license.css"></link>
-    <link rel="stylesheet" type="text/css" href="css/help.css"></link>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/license.css">
+    <link rel="stylesheet" href="css/help.css">
+    <script src="lib/jquery-1.7.2.min.js"></script>
     <script src="js/help.js"></script>
     <script src="js/license.js"></script>
-    <script src="js/jquery-1.7.2.min.js"></script>
     <script src="js/main.js"></script>
 </head>
 <body>
@@ -41,18 +54,18 @@
            <div id="help_contents" class="contents">
                Try to be the first to get four of your candies in a row.
                <br><br>
-               First, choose what color your candies will be. Then choose 
+               First, choose what color your candies will be. Then choose
                a single game, best two out of three, or best three out of five.
                <br><br>
-               Take turns, with a friend, clicking to drop your candies down 
-               the column where you want your candy to go. The first to get 
-               four of their candies lined up in any direction (vertical, 
-               horizontal, or diagonal) wins! If the board fills up without 
+               Take turns, with a friend, clicking to drop your candies down
+               the column where you want your candy to go. The first to get
+               four of their candies lined up in any direction (vertical,
+               horizontal, or diagonal) wins! If the board fills up without
                anyone winning, everything is cleared off, and the game continues.
                <br><br>
-               If you want to restart a game, click the X at the bottom-right 
-               of the screen, and click Yes and you’ll be taken back to the 
-               beginning. If you do this by mistake, click No, and your current 
+               If you want to restart a game, click the X at the bottom-right
+               of the screen, and click Yes and you’ll be taken back to the
+               beginning. If you do this by mistake, click No, and your current
                game continues.
            </div>
          </div>

@@ -5,12 +5,7 @@ all:
 
 install:
 	mkdir -p ${DESTDIR}/usr/share/${APPNAME}
-	cp -a audio ${DESTDIR}/usr/share/${APPNAME}/
-	cp -a css ${DESTDIR}/usr/share/${APPNAME}/
-	cp -a fonts ${DESTDIR}/usr/share/${APPNAME}/
-	cp -a images ${DESTDIR}/usr/share/${APPNAME}/
-	cp -a js ${DESTDIR}/usr/share/${APPNAME}/
-	cp -a _locales ${DESTDIR}/usr/share/${APPNAME}/
+	cp -a app/* ${DESTDIR}/usr/share/${APPNAME}/
 	cp icon.png ${DESTDIR}/usr/share/${APPNAME}/
 	cp *.html ${DESTDIR}/usr/share/${APPNAME}/
 	cp manifest.json ${DESTDIR}/usr/share/${APPNAME}/
