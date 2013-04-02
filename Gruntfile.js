@@ -15,11 +15,10 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         files: {
-          'build/app/js/all.js': [
-            'app/js/help.js',
-            'app/js/license.js',
-            'app/js/main.js'
-          ]
+          'build/app/js/main.js': ['app/js/main.js'],
+          'build/app/js/help.js': ['app/js/help.js'],
+          'build/app/js/license.js': ['app/js/license.js'],
+          'build/app/js/run.js': ['app/js/run.js']
         }
       }
     },
@@ -67,15 +66,11 @@ module.exports = function (grunt) {
               content = content.replace(/.+\/\/.+?\n/g, '');
               content = content.replace(/<!--[\s\S]+?-->/g, '');
 
-              // JS
-              content = content.replace(/main\.js/, '!!!all.js!!!');
-              content = content.replace(/<script src="js\/[^\!]+?"><\/script>\n/g, '');
-
               // CSS
               content = content.replace(/main\.css/, '!!!all.css!!!');
               content = content.replace(/<link rel="stylesheet" href="[^\!]+?">\n/g, '');
 
-              // fix JS and CSS resources
+              // fix CSS resources
               content = content.replace(/!!!/g, '');
 
               // whitespace reduction

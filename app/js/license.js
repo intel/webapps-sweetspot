@@ -97,3 +97,4 @@ function license_init(id, hpageid)
     };
 }
 
+license_init("license", "intro_page");

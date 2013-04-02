@@ -114,7 +114,7 @@ input:focus {
     100% { top:48px; }
 }
 
-#intro_candyblue {
+.drop.candyblue {
     position: absolute;
     top: 48px;
     left: 533px;
@@ -130,7 +130,7 @@ input:focus {
     100% { top:118px; }
 }
 
-#intro_candygreen {
+.drop.candygreen {
     position: absolute;
     top: 118px;
     left: 688px;
@@ -147,7 +147,7 @@ input:focus {
     100% { top:48px; }
 }
 
-#intro_candyred {
+.drop.candyred {
     position: absolute;
     top: 48px;
     left: 344px;
@@ -164,7 +164,7 @@ input:focus {
     100% { top:118px; }
 }
 
-#intro_candyorange {
+.drop.candyorange {
     position: absolute;
     top: 118px;
     left: 168px;

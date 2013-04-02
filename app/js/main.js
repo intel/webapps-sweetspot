@@ -7,9 +7,8 @@
  *
  */
 
-
 (function () {
-    var Game = {};
+    Game = {};
 
     var numtext = ["0", "1", "2", "3", "4", "5"];
 
@@ -664,11 +663,10 @@
 
     // initialise individual pages
     var introPage = function () {
-      /* intro page interaction */
-      $("#intro_playbutton").click(function() {
-        selectsnd();
-        $("#intro_page").hide();
-        $("#players_page").show();
+      // animation for front page
+      $('[data-drop]').each(function () {
+        var drop = $(this).attr('data-drop');
+        $(this).addClass('drop').addClass(drop);
       });
     };
 
@@ -766,49 +764,43 @@
       $('#win_startover_text').click(function() {end_game()});
     };
 
-    // we can load sounds before the DOM is ready
+    // load sounds
     Game.select_sound = new gamesound("audio/Select.ogg");
+    Game.move_sound = new gamesound("audio/GamePiece.ogg");
+    Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
+    Game.win_sound = new gamesound("audio/Winner.ogg");
 
-    // set up initial page
-    $(document).ready(function() {
-      Game.player1name = "";
-      Game.player2name = "";
-      Game.computer = false;
-      Game.playercolor = [-1, -1];
-      Game.gametype = -1;
-      Game.activegame = new GameData();
-      Game.activecolumn = 0;
-      Game.activeplayer = 0;
-      Game.playerwins = [0, 0];
-      Game.ignore_input = false;
-      Game.movecomplete = movecomplete;
-      Game.game_over = game_over;
-      Game.start_new = start_new;
+    Game.player1name = "";
+    Game.player2name = "";
+    Game.computer = false;
+    Game.playercolor = [-1, -1];
+    Game.gametype = -1;
+    Game.activegame = new GameData();
+    Game.activecolumn = 0;
+    Game.activeplayer = 0;
+    Game.playerwins = [0, 0];
+    Game.ignore_input = false;
+    Game.movecomplete = movecomplete;
+    Game.game_over = game_over;
+    Game.start_new = start_new;
 
-      if (window.chrome && window.chrome.i18n) {
-        translate();
-      }
+    if (window.chrome && window.chrome.i18n) {
+      translate();
+    }
 
-      init_game();
+    init_game();
 
-      $.ajax('./pages.html')
-      .then(function (data) {
-        $('body').append(data);
-      })
-      .always(function () {
-        introPage();
-        playerPage();
-        gameTypePage();
-        gamePage();
-        license_init("license", "intro_page");
-        help_init("main_help", "help_");
+    introPage();
+    playerPage();
+    gameTypePage();
+    gamePage();
 
-        // load remaining sounds
-        Game.move_sound = new gamesound("audio/GamePiece.ogg");
-        Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
-        Game.win_sound = new gamesound("audio/Winner.ogg");
+    storage.save();
 
-        storage.save();
-      });
+    // game is playable, so enable the "Play" button
+    $("#intro_playbutton").click(function() {
+      selectsnd();
+      $("#intro_page").hide();
+      $("#players_page").show();
     });
 })()
