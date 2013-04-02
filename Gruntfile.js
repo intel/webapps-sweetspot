@@ -62,6 +62,10 @@ module.exports = function (grunt) {
           // files are space-sensitive, but most HTML shouldn't be)
           processContent: function (content) {
             if (content.match(/DOCTYPE/)) {
+              // remove comments
+              content = content.replace(/.+\/\/.+?\n/g, '');
+              content = content.replace(/<!--[\s\S]+?-->/g, '');
+
               // JS
               content = content.replace(/main\.js/, '!!!all.js!!!');
               content = content.replace(/<script src="js\/[^\!]+?"><\/script>\n/g, '');
