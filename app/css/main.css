@@ -26,6 +26,11 @@ body {
     display: -webkit-box;
 }
 
+#licensebtnl {
+  top: 564px;
+  left: 977px;
+}
+
 .game_page {
     background-position: left top;
 
