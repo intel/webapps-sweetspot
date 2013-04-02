@@ -735,27 +735,27 @@
           }
         });
 
-        $('#type_onegame').mousedown(function() {navsnd();settype(0);});
-        $('#type_bestofthree').mousedown(function() {navsnd();settype(1);});
-        $('#type_bestoffive').mousedown(function() {navsnd();settype(2);});
+        $('#type_onegame').on('mousedown', function() {navsnd();settype(0);});
+        $('#type_bestofthree').on('mousedown', function() {navsnd();settype(1);});
+        $('#type_bestoffive').on('mousedown', function() {navsnd();settype(2);});
     };
 
     var gamePage = function () {
-      $('#game_column1').mousedown(function() {startmove(0);});
-      $('#game_column2').mousedown(function() {startmove(1);});
-      $('#game_column3').mousedown(function() {startmove(2);});
-      $('#game_column4').mousedown(function() {startmove(3);});
-      $('#game_column5').mousedown(function() {startmove(4);});
-      $('#game_column6').mousedown(function() {startmove(5);});
-      $('#game_column7').mousedown(function() {startmove(6);});
+      $('#game_column1').on('mousedown', function() {startmove(0);});
+      $('#game_column2').on('mousedown', function() {startmove(1);});
+      $('#game_column3').on('mousedown', function() {startmove(2);});
+      $('#game_column4').on('mousedown', function() {startmove(3);});
+      $('#game_column5').on('mousedown', function() {startmove(4);});
+      $('#game_column6').on('mousedown', function() {startmove(5);});
+      $('#game_column7').on('mousedown', function() {startmove(6);});
 
-      $('#game_column1').mouseover(function() {updateselector(0);});
-      $('#game_column2').mouseover(function() {updateselector(1);});
-      $('#game_column3').mouseover(function() {updateselector(2);});
-      $('#game_column4').mouseover(function() {updateselector(3);});
-      $('#game_column5').mouseover(function() {updateselector(4);});
-      $('#game_column6').mouseover(function() {updateselector(5);});
-      $('#game_column7').mouseover(function() {updateselector(6);});
+      $('#game_column1').on('mouseover', function() {updateselector(0);});
+      $('#game_column2').on('mouseover', function() {updateselector(1);});
+      $('#game_column3').on('mouseover', function() {updateselector(2);});
+      $('#game_column4').on('mouseover', function() {updateselector(3);});
+      $('#game_column5').on('mouseover', function() {updateselector(4);});
+      $('#game_column6').on('mouseover', function() {updateselector(5);});
+      $('#game_column7').on('mouseover', function() {updateselector(6);});
 
       $('#game_quit').click(function() {$("#quit_dlg").show();});
       $('#quit_dlg_no').click(function() {$("#quit_dlg").hide();});
