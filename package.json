@@ -1,7 +1,7 @@
 {
-  "name": "Sweetstop",
+  "name": "Sweetspot",
   "version": "1.0.0",
-  "description": "Sweetstop: an implementation of Connect Four",
+  "description": "Sweetspot: an implementation of Connect Four",
   "main": "app/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
