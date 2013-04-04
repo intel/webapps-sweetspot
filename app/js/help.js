@@ -24,3 +24,4 @@ function help_init(btnid, prefix)
     });
 }
 
+help_init("main_help", "help_");

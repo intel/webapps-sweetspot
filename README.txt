@@ -30,14 +30,14 @@ SOUNDS
 MenuNavigation.wav:
 Origin: http://www.freesound.org/people/junggle/sounds/29301/
 
-These files were created by Intel Corp. and are licensed under 
+These files were created by Intel Corp. and are licensed under
 the Creative Commons Attribution 3.0 license http://creativecommons.org/licenses/by/3.0/us/
 GamePiece.wav, Select.wav, Winner.wav
 
 LIBRARIES
 -------------------------------------------------------------------------------------------------------------------------------------------
 
-jQuery JavaScript Library v1.7.2
-Copyright 2011, John Resig
-Dual licensed under the MIT or GPL Version 2 licenses.
-http://jquery.org/license
+Intel App Framework (aka jqMobi) @ git commit 0e07987a
+Copyright 2011, Intel Corporation Ltd.
+MIT X11 licence
+https://github.com/01org/appframework/blob/master/license.txt

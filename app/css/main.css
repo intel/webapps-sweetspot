@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2012, Intel Corporation.
  *
- * This program is licensed under the terms and conditions of the 
+ * This program is licensed under the terms and conditions of the
  * Apache License, version 2.0.  The full text of the Apache License is at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -24,6 +24,11 @@ body {
     -webkit-box-pack: center;
     -webkit-box-orient: vertical;
     display: -webkit-box;
+}
+
+#licensebtnl {
+  top: 564px;
+  left: 977px;
 }
 
 .game_page {
@@ -74,7 +79,7 @@ input
 {
     border: 0px;
     padding: 0px;
-    color: #FFFFFF; 
+    color: #FFFFFF;
     background-color: transparent;
     font-family: 'Yellowtail';
     font-size: 26pt;
@@ -96,7 +101,7 @@ input:focus {
 /* -------------------------------- intro page ----------------------------- */
 
 #intro_bg {
-    background:url(../images/Home-background.png) no-repeat;
+    background:url(../images/Home-background.jpg) no-repeat;
     width: 100%;
     height: 100%;
     z:1;
@@ -109,7 +114,7 @@ input:focus {
     100% { top:48px; }
 }
 
-#intro_candyblue {
+.drop.candyblue {
     position: absolute;
     top: 48px;
     left: 533px;
@@ -125,7 +130,7 @@ input:focus {
     100% { top:118px; }
 }
 
-#intro_candygreen {
+.drop.candygreen {
     position: absolute;
     top: 118px;
     left: 688px;
@@ -142,7 +147,7 @@ input:focus {
     100% { top:48px; }
 }
 
-#intro_candyred {
+.drop.candyred {
     position: absolute;
     top: 48px;
     left: 344px;
@@ -159,7 +164,7 @@ input:focus {
     100% { top:118px; }
 }
 
-#intro_candyorange {
+.drop.candyorange {
     position: absolute;
     top: 118px;
     left: 168px;
@@ -186,7 +191,7 @@ input:focus {
 /* -------------------------------- player page ----------------------------- */
 
 #player_bg {
-    background:url(../images/PlayerNamesandColor-background.png) no-repeat;
+    background:url(../images/PlayerNamesandColor-background.jpg) no-repeat;
     width: 100%;
     height: 100%;
     z:1;
@@ -364,7 +369,7 @@ input:focus {
     height: 85px;
 }
 
-.pickred {
+.pick.red {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -372,7 +377,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-red.png) no-repeat;
 }
 
-.pickblue {
+.pick.blue {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -380,7 +385,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-blue.png) no-repeat;
 }
 
-.pickgreen {
+.pick.green {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -388,7 +393,7 @@ input:focus {
     background:url(../images/Candy-ColorSelect-green.png) no-repeat;
 }
 
-.pickorange {
+.pick.orange {
     position: absolute;
     width: 85px;
     height: 85px;
@@ -412,7 +417,7 @@ input:focus {
 /* -------------------------------- type page ----------------------------- */
 
 #type_bg {
-    background:url(../images/ChooseGame-background.png) no-repeat;
+    background:url(../images/ChooseGame-background.jpg) no-repeat;
     width: 100%;
     height: 100%;
     z:1;
@@ -508,7 +513,7 @@ input:focus {
 /* -------------------------------- game page ----------------------------- */
 
 #game_bg {
-    background:url(../images/GameBoard-background.png) no-repeat;
+    background:url(../images/GameBoard-background.jpg) no-repeat;
     width: 100%;
     height: 100%;
     z:1;
@@ -689,9 +694,9 @@ input:focus {
 .game_row5 { top: 120px; -webkit-animation: candy_row5_anim 0.6s ease-in 0s 1; }
 
 @-webkit-keyframes piece_win_anim {
-    0% { -webkit-transform:scale(1); } 
-    50% { -webkit-transform:scale(1.2); } 
-    100% { -webkit-transform:scale(1); } 
+    0% { -webkit-transform:scale(1); }
+    50% { -webkit-transform:scale(1.2); }
+    100% { -webkit-transform:scale(1); }
 }
 
 .game_piece_win1 { -webkit-animation: piece_win_anim 0.6s linear 0s 1;}
@@ -699,7 +704,7 @@ input:focus {
 .game_piece_win3 { -webkit-animation: piece_win_anim 0.6s linear 0.2s 1;}
 .game_piece_win4 { -webkit-animation: piece_win_anim 0.6s linear 0.3s 1;}
 
-.game_piece_blue { 
+.game_piece_blue {
     position: absolute;
     height: 74px;
     width: 73px;
@@ -707,7 +712,7 @@ input:focus {
     background-position: center;
 }
 
-.game_piece_green { 
+.game_piece_green {
     position: absolute;
     height: 74px;
     width: 73px;
@@ -715,7 +720,7 @@ input:focus {
     background-position: center;
 }
 
-.game_piece_red { 
+.game_piece_red {
     position: absolute;
     height: 74px;
     width: 73px;
@@ -723,7 +728,7 @@ input:focus {
     background-position: center;
 }
 
-.game_piece_orange { 
+.game_piece_orange {
     position: absolute;
     height: 74px;
     width: 73px;
@@ -830,7 +835,7 @@ input:focus {
 /* -------------------------------- win page ----------------------------- */
 
 #win_bg {
-    background:url(../images/Winner-background.png) no-repeat;
+    background:url(../images/Winner-background.jpg) no-repeat;
     width: 100%;
     height: 100%;
     z:1;
