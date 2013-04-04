@@ -1,16 +1,90 @@
 /*
  * Copyright (c) 2012, Intel Corporation.
  *
- * This program is licensed under the terms and conditions of the 
+ * This program is licensed under the terms and conditions of the
  * Apache License, version 2.0.  The full text of the Apache License is at
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
 
-Game = {};
-
 (function () {
+    Game = {};
+
     var numtext = ["0", "1", "2", "3", "4", "5"];
+
+    var Storage = function () {
+      var obj = {};
+      var localStorageIndex = 'sweetspot_game_data';
+
+      var data = {
+        'gametype': null,
+        'player1Name': null,
+        'player2Name': null,
+        'player1Color': null,
+        'player2Color': null
+      };
+
+      obj.save = function () {
+        var str = JSON.stringify(data);
+        localStorage.setItem(localStorageIndex, str);
+      };
+
+      obj.load = function () {
+        var str = localStorage.getItem(localStorageIndex);
+        if (str) {
+          data = JSON.parse(str);
+        }
+      };
+
+      var set = function (key, value) {
+        data[key] = value;
+      };
+
+      obj.setGameType = function (type) {
+        set('gametype', type);
+      };
+
+      obj.getGameType = function (type) {
+        return data.gametype;
+      };
+
+      obj.setPlayer1Color = function (color) {
+        set('player1Color', color);
+      };
+
+      obj.setPlayer2Color = function (color) {
+        set('player2Color', color);
+      };
+
+      obj.getPlayer1Color = function () {
+        return data.player1Color;
+      };
+
+      obj.getPlayer2Color = function () {
+        return data.player2Color;
+      };
+
+      obj.setPlayer1Name = function (name) {
+        set('player1Name', name);
+      };
+
+      obj.setPlayer2Name = function (name) {
+        set('player2Name', name);
+      };
+
+      obj.getPlayer1Name = function () {
+        return data.player1Name;
+      };
+
+      obj.getPlayer2Name = function () {
+        return data.player2Name;
+      };
+
+      return obj;
+    };
+
+    var storage = Storage();
+    storage.load();
 
     function GameData() {
         this.array = [[-1, -1, -1, -1, -1, -1],
@@ -133,17 +207,18 @@ Game = {};
     }
 
     function gamesound(file) {
-        this.file = file;
-        this.soundobj = new Array();
-        this.soundobj.push(new Audio(file));
-        this.soundobj.push(new Audio(file));
-        this.idx = 0;
-        this.play = function play() {
-            /* create two instances of the file to play sequentially if calls */
-            /* come too fast, otherwise the second call will be ignored */
-            this.soundobj[this.idx].play();
-            this.idx = (this.idx + 1)%2;
-        };
+      this.soundobj = new Audio(file);
+      this.isPlaying = false;
+      this.play = function () {
+        if (this.isPlaying) {
+          this.soundobj.pause();
+          this.soundobj.currentTime = 0;
+          this.isPlaying = false;
+        }
+
+        this.soundobj.play();
+        this.isPlaying = true;
+      };
     }
 
     function settype(type) {
@@ -151,7 +226,7 @@ Game = {};
                     "#type_bestoffive"];
 
         Game.gametype = type;
-        localStorage.setItem("sweetspot_gametype", type);
+        storage.setGameType(type);
 
         for(var i = 0; i < 3; i++)
         {
@@ -181,12 +256,12 @@ Game = {};
         if(player == 1)
         {
             Game.playercolor[0] = tgt;
-            localStorage.setItem("sweetspot_player1_color", tgt);
+            storage.setPlayer1Color(tgt);
         }
         else
         {
             Game.playercolor[1] = tgt;
-            localStorage.setItem("sweetspot_player2_color", tgt);
+            storage.setPlayer2Color(tgt);
         }
 
         for(var i = 0; i < 4; i++)
@@ -234,47 +309,31 @@ Game = {};
     }
 
     function init_game() {
-        if(localStorage.getItem("sweetspot_player1"))
-            Game.player1name = localStorage.getItem("sweetspot_player1");
-        else
-            Game.player1name = "Player1";
+      Game.player1name = storage.getPlayer1Name() || "Player1";
+      Game.player2name = storage.getPlayer2Name() || "Player2";
 
-        if(localStorage.getItem("sweetspot_player2"))
-            Game.player2name = localStorage.getItem("sweetspot_player2");
-        else
-            Game.player2name = "Player2";
+      var player1Color = storage.getPlayer1Color() || 2;
+      setcolor(1, player1Color);
 
-        $('#player1name').val(Game.player1name);
-        $('#player2name').val(Game.player2name);
+      var player2Color = storage.getPlayer1Color() || 3;
+      setcolor(2, player2Color);
 
-        if(localStorage.getItem("sweetspot_player1_color"))
-            setcolor(1, parseInt(localStorage.getItem("sweetspot_player1_color")));
-        else
-            setcolor(1, 2);
-
-        if(localStorage.getItem("sweetspot_player2_color"))
-            setcolor(2, parseInt(localStorage.getItem("sweetspot_player2_color")));
-        else
-            setcolor(2, 3);
-
-        if(localStorage.getItem("sweetspot_gametype"))
-            settype(parseInt(localStorage.getItem("sweetspot_gametype")));
-        else
-            settype(0);
+      var gametype = storage.getGameType() || 0;
+      settype(gametype);
     }
 
     function ignore_user_input() {
-        Game.ignore_input = true;
+      Game.ignore_input = true;
     }
 
     function enable_user_input() {
-        Game.ignore_input = false;
+      Game.ignore_input = false;
     }
 
     /* this represents a user making a move by clicking a column */
     function startmove(column, computer) {
         /* if we're in the middle of an animation, do nothing */
-        if(Game.ignore_input&&(computer!==true))
+        if (Game.ignore_input&&(computer!==true))
             return;
 
         updateselector(column);
@@ -565,164 +624,183 @@ Game = {};
 
     function player1namechange() {
         Game.player1name = $('#player1name').val();
-        localStorage.setItem("sweetspot_player1", Game.player1name);
+        storage.setPlayer1Name(Game.player1name);
+        storage.save();
         test_player_ready();
     }
 
     function player2namechange() {
         Game.player2name = $('#player2name').val();
-        localStorage.setItem("sweetspot_player2", Game.player2name);
+        storage.setPlayer2Name(Game.player2name);
+        storage.save();
         test_player_ready();
     }
 
-    $(document).ready(function()
-    {
-        /* initialization */
-        license_init("license", "intro_page");
-        help_init("main_help", "help_");
-        Game.player1name = "";
-        Game.player2name = "";
-        Game.computer = false;
-        Game.playercolor = [-1, -1];
-        Game.gametype = -1;
-        Game.activegame = new GameData();
-        Game.activecolumn = 0;
-        Game.activeplayer = 0;
-        Game.playerwins = [0, 0];
-        Game.ignore_input = false;
-        Game.movecomplete = movecomplete;
-        Game.game_over = game_over;
-        Game.start_new = start_new;
-        Game.move_sound = new gamesound("audio/GamePiece.wav");
-        Game.menunav_sound = new gamesound("audio/MenuNavigation.wav");
-        Game.select_sound = new gamesound("audio/Select.wav");
-        Game.win_sound = new gamesound("audio/Winner.wav");
+    var translate = function () {
+      $("#intro_playbutton").text(chrome.i18n.getMessage("play"));
+      $("#player_player1_static").text(chrome.i18n.getMessage("player1"));
+      $("#player_player2_static").text(chrome.i18n.getMessage("player2"));
+      $("#player_text_chooseyour").text(chrome.i18n.getMessage("chooseyour"));
+      $("#player_text_color").text(chrome.i18n.getMessage("color"));
+      $("#player_nextbutton").text(chrome.i18n.getMessage("next"));
+      $("#type_onegame_text").text(chrome.i18n.getMessage("1game"));
+      $("#type_bestofthree_text").text(chrome.i18n.getMessage("2game"));
+      $("#type_bestoffive_text").text(chrome.i18n.getMessage("3game"));
+      $("#type_startbutton").text(chrome.i18n.getMessage("start"));
+      $("#quit_dlg_img").text(chrome.i18n.getMessage("startoverquestion"));
+      $("#quit_dlg_no").text(chrome.i18n.getMessage("no"));
+      $("#quit_dlg_yes").text(chrome.i18n.getMessage("yes"));
+      $("#win_banner").text(chrome.i18n.getMessage("winner"));
+      $("#win_playagain_text").text(chrome.i18n.getMessage("playagain"));
+      $("#win_startover_text").text(chrome.i18n.getMessage("startover"));
+      numtext[0] = chrome.i18n.getMessage("num0");
+      numtext[1] = chrome.i18n.getMessage("num1");
+      numtext[2] = chrome.i18n.getMessage("num2");
+      numtext[3] = chrome.i18n.getMessage("num3");
+      numtext[4] = chrome.i18n.getMessage("num4");
+      numtext[5] = chrome.i18n.getMessage("num5");
+    };
 
-        if (window.chrome&&window.chrome.i18n)
-        {
-            $("#intro_playbutton").text(chrome.i18n.getMessage("play"));
-            $("#player_player1_static").text(chrome.i18n.getMessage("player1"));
-            $("#player_player2_static").text(chrome.i18n.getMessage("player2"));
-            $("#player_text_chooseyour").text(chrome.i18n.getMessage("chooseyour"));
-            $("#player_text_color").text(chrome.i18n.getMessage("color"));
-            $("#player_nextbutton").text(chrome.i18n.getMessage("next"));
-            $("#type_onegame_text").text(chrome.i18n.getMessage("1game"));
-            $("#type_bestofthree_text").text(chrome.i18n.getMessage("2game"));
-            $("#type_bestoffive_text").text(chrome.i18n.getMessage("3game"));
-            $("#type_startbutton").text(chrome.i18n.getMessage("start"));
-            $("#quit_dlg_img").text(chrome.i18n.getMessage("startoverquestion"));
-            $("#quit_dlg_no").text(chrome.i18n.getMessage("no"));
-            $("#quit_dlg_yes").text(chrome.i18n.getMessage("yes"));
-            $("#win_banner").text(chrome.i18n.getMessage("winner"));
-            $("#win_playagain_text").text(chrome.i18n.getMessage("playagain"));
-            $("#win_startover_text").text(chrome.i18n.getMessage("startover"));
-            numtext[0] = chrome.i18n.getMessage("num0");
-            numtext[1] = chrome.i18n.getMessage("num1");
-            numtext[2] = chrome.i18n.getMessage("num2");
-            numtext[3] = chrome.i18n.getMessage("num3");
-            numtext[4] = chrome.i18n.getMessage("num4");
-            numtext[5] = chrome.i18n.getMessage("num5");
-        }
+    // initialise individual pages
+    var introPage = function () {
+      // animation for front page
+      $('[data-drop]').each(function () {
+        var drop = $(this).attr('data-drop');
+        $(this).addClass('drop').addClass(drop);
+      });
+    };
 
-        /* intro page interaction */
+    var playerPage = function () {
+      $('#player1name').val(Game.player1name);
+      $('#player2name').val(Game.player2name);
 
-        $("#intro_playbutton").click(function() { 
+      $('#players_page').delegate('.pick', 'mousedown', function (e) {
+        var elt = $(e.target);
+
+        navsnd();
+
+        var player = parseInt(elt.attr('data-player'));
+        var color = parseInt(elt.attr('data-color'));
+
+        setcolor(player, color);
+      });
+
+      var p1name = document.getElementById("player1name");
+      var p2name = document.getElementById("player2name");
+      p1name.onkeyup = player1namechange;
+      p2name.onkeyup = player2namechange;
+      p1name.onblur = player1namechange;
+      p2name.onblur = player2namechange;
+      p1name.onchange = player1namechange;
+      p2name.onchange = player2namechange;
+
+      $("#player_nextbutton").click(function() {
+          if($("#player_nextbutton").hasClass("active_button"))
+          {
+              selectsnd();
+              $("#players_page").hide();
+              $("#type_page").show();
+          }
+      });
+    };
+
+    var gameTypePage = function () {
+        $("#type_startbutton").click(function() {
+          if ($("#type_startbutton").hasClass("active_button")) {
             selectsnd();
-            $("#intro_page").hide();
-            $("#players_page").show();
-        });
+            updateselector(Game.activecolumn);
+            var color1class = ["game_player1orange", "game_player1red",
+                         "game_player1blue", "game_player1green"];
+            var color2class = ["game_player2orange", "game_player2red",
+                         "game_player2blue", "game_player2green"];
 
-        /* player page interaction */
+            for(var i = 0; i < 4; i++) {
+              var c1 = Game.playercolor[0];
+              var c2 = Game.playercolor[1];
+              if(i == c1)
+                  $("#game_player1marquee").addClass(color1class[i]);
+              else
+                  $("#game_player1marquee").removeClass(color1class[i]);
 
-        $('#player_player1orange').mousedown(function() {navsnd();setcolor(1, 0);});
-        $('#player_player1red').mousedown(function() {navsnd();setcolor(1, 1);});
-        $('#player_player1blue').mousedown(function() {navsnd();setcolor(1, 2);});
-        $('#player_player1green').mousedown(function() {navsnd();setcolor(1, 3);});
-        $('#player_player2orange').mousedown(function() {navsnd();setcolor(2, 0);});
-        $('#player_player2red').mousedown(function() {navsnd();setcolor(2, 1);});
-        $('#player_player2blue').mousedown(function() {navsnd();setcolor(2, 2);});
-        $('#player_player2green').mousedown(function() {navsnd();setcolor(2, 3);});
-
-        var p1name = document.getElementById("player1name");
-        var p2name = document.getElementById("player2name");
-        p1name.onkeyup = player1namechange;
-        p2name.onkeyup = player2namechange;
-        p1name.onblur = player1namechange;
-        p2name.onblur = player2namechange;
-        p1name.onchange = player1namechange;
-        p2name.onchange = player2namechange;
-
-        $("#player_nextbutton").click(function() { 
-            if($("#player_nextbutton").hasClass("active_button"))
-            {
-                selectsnd();
-                $("#players_page").hide();
-                $("#type_page").show();
+              if(i == c2)
+                  $("#game_player2marquee").addClass(color2class[i]);
+              else
+                  $("#game_player2marquee").removeClass(color2class[i]);
             }
+
+            $("#game_player1name").text(Game.player1name);
+            $("#game_player2name").text(Game.player2name);
+            $("#type_page").hide();
+            $("#game_page").show();
+          }
         });
 
-        /* game type page interaction */
+        $('#type_onegame').on('mousedown', function() {navsnd();settype(0);});
+        $('#type_bestofthree').on('mousedown', function() {navsnd();settype(1);});
+        $('#type_bestoffive').on('mousedown', function() {navsnd();settype(2);});
+    };
 
-        $("#type_startbutton").click(function() { 
-            if($("#type_startbutton").hasClass("active_button"))
-            {
-                selectsnd();
-                updateselector(Game.activecolumn);
-                var color1class = ["game_player1orange", "game_player1red",
-                             "game_player1blue", "game_player1green"];
-                var color2class = ["game_player2orange", "game_player2red",
-                             "game_player2blue", "game_player2green"];
+    var gamePage = function () {
+      $('#game_column1').on('mousedown', function() {startmove(0);});
+      $('#game_column2').on('mousedown', function() {startmove(1);});
+      $('#game_column3').on('mousedown', function() {startmove(2);});
+      $('#game_column4').on('mousedown', function() {startmove(3);});
+      $('#game_column5').on('mousedown', function() {startmove(4);});
+      $('#game_column6').on('mousedown', function() {startmove(5);});
+      $('#game_column7').on('mousedown', function() {startmove(6);});
 
-                for(var i = 0; i < 4; i++)
-                {
-                    var c1 = Game.playercolor[0];
-                    var c2 = Game.playercolor[1];
-                    if(i == c1)
-                        $("#game_player1marquee").addClass(color1class[i]);
-                    else
-                        $("#game_player1marquee").removeClass(color1class[i]);
+      $('#game_column1').on('mouseover', function() {updateselector(0);});
+      $('#game_column2').on('mouseover', function() {updateselector(1);});
+      $('#game_column3').on('mouseover', function() {updateselector(2);});
+      $('#game_column4').on('mouseover', function() {updateselector(3);});
+      $('#game_column5').on('mouseover', function() {updateselector(4);});
+      $('#game_column6').on('mouseover', function() {updateselector(5);});
+      $('#game_column7').on('mouseover', function() {updateselector(6);});
 
-                    if(i == c2)
-                        $("#game_player2marquee").addClass(color2class[i]);
-                    else
-                        $("#game_player2marquee").removeClass(color2class[i]);
-                }
+      $('#game_quit').click(function() {$("#quit_dlg").show();});
+      $('#quit_dlg_no').click(function() {$("#quit_dlg").hide();});
+      $('#quit_dlg_yes').click(function() {end_game()});
+      $('#win_playagain_text').click(function() {restart_game()});
+      $('#win_startover_text').click(function() {end_game()});
+    };
 
-                $("#game_player1name").text(Game.player1name);
-                $("#game_player2name").text(Game.player2name);
-                $("#type_page").hide();
-                $("#game_page").show();
-            }
-        });
+    // load sounds
+    Game.select_sound = new gamesound("audio/Select.ogg");
+    Game.move_sound = new gamesound("audio/GamePiece.ogg");
+    Game.menunav_sound = new gamesound("audio/MenuNavigation.ogg");
+    Game.win_sound = new gamesound("audio/Winner.ogg");
 
-        $('#type_onegame').mousedown(function() {navsnd();settype(0);});
-        $('#type_bestofthree').mousedown(function() {navsnd();settype(1);});
-        $('#type_bestoffive').mousedown(function() {navsnd();settype(2);});
+    Game.player1name = "";
+    Game.player2name = "";
+    Game.computer = false;
+    Game.playercolor = [-1, -1];
+    Game.gametype = -1;
+    Game.activegame = new GameData();
+    Game.activecolumn = 0;
+    Game.activeplayer = 0;
+    Game.playerwins = [0, 0];
+    Game.ignore_input = false;
+    Game.movecomplete = movecomplete;
+    Game.game_over = game_over;
+    Game.start_new = start_new;
 
-        /* game page */
+    if (window.chrome && window.chrome.i18n) {
+      translate();
+    }
 
-        $('#game_column1').mousedown(function() {startmove(0);});
-        $('#game_column2').mousedown(function() {startmove(1);});
-        $('#game_column3').mousedown(function() {startmove(2);});
-        $('#game_column4').mousedown(function() {startmove(3);});
-        $('#game_column5').mousedown(function() {startmove(4);});
-        $('#game_column6').mousedown(function() {startmove(5);});
-        $('#game_column7').mousedown(function() {startmove(6);});
+    init_game();
 
-        $('#game_column1').mouseover(function() {updateselector(0);});
-        $('#game_column2').mouseover(function() {updateselector(1);});
-        $('#game_column3').mouseover(function() {updateselector(2);});
-        $('#game_column4').mouseover(function() {updateselector(3);});
-        $('#game_column5').mouseover(function() {updateselector(4);});
-        $('#game_column6').mouseover(function() {updateselector(5);});
-        $('#game_column7').mouseover(function() {updateselector(6);});
+    introPage();
+    playerPage();
+    gameTypePage();
+    gamePage();
 
-        $('#game_quit').click(function() {$("#quit_dlg").show();});
-        $('#quit_dlg_no').click(function() {$("#quit_dlg").hide();});
-        $('#quit_dlg_yes').click(function() {end_game()});
-        $('#win_playagain_text').click(function() {restart_game()});
-        $('#win_startover_text').click(function() {end_game()});
+    storage.save();
 
-        init_game();
+    // game is playable, so enable the "Play" button
+    $("#intro_playbutton").click(function() {
+      selectsnd();
+      $("#intro_page").hide();
+      $("#players_page").show();
     });
 })()
