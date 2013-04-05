@@ -8,6 +8,7 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     packageInfo: grunt.file.readJSON('package.json'),
+    chromeInfo: grunt.file.readJSON('manifest.json'),
 
     clean: ['build'],
 
@@ -41,10 +42,8 @@ module.exports = function (grunt) {
     // minified/concated js file all.js and minified/concated CSS file
     // all.css
     copy: {
-      dist: {
+      common: {
         files: [
-          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/app/' },
-          { expand: true, cwd: '.', src: ['icon*.png'], dest: 'build/app/' },
           { expand: true, cwd: '.', src: ['README.txt'], dest: 'build/app/' },
           { expand: true, cwd: '.', src: ['app/**.html'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/audio/**'], dest: 'build/' },
@@ -93,18 +92,34 @@ module.exports = function (grunt) {
             'README.txt'
           ]
         }
+      },
+      wgt: {
+        files: [
+          { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/wgt/' },
+          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/wgt/' },
+          { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/wgt/' }
+        ]
+      },
+      crx: {
+        files: [
+          { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/crx/' },
+          { expand: true, cwd: '.', src: ['manifest.json'], dest: 'build/crx/' },
+          { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' }
+        ]
       }
     },
 
-    // make wgt package in build/ directory
+    // make wgt and crx packages in build/ directory
     package: {
-      appName: '<%= packageInfo.name %>',
-      version: '<%= packageInfo.version %>',
-      files: 'build/app/**',
-      stripPrefix: 'build/app/',
-      outDir: 'build',
-      suffix: '.wgt',
-      addGitCommitId: false
+      wgt: {
+        appName: '<%= packageInfo.name %>',
+        version: '<%= packageInfo.version %>',
+        files: 'build/wgt/**',
+        stripPrefix: 'build/wgt/',
+        outDir: 'build',
+        suffix: '.wgt',
+        addGitCommitId: false
+      }
     },
 
     sdb: {
@@ -158,17 +173,20 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:dist']);
+  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common']);
+  grunt.registerTask('wgt', ['dist', 'copy:wgt', 'package:wgt']);
+  grunt.registerTask('crx', ['dist', 'copy:crx']);
 
-  grunt.registerTask('pkg', 'Create package; call with pkg:STR to append STR to package name', function (identifier) {
-    grunt.task.run('dist');
-
-    var packageTask = (identifier ? 'package:' + identifier : 'package');
-    grunt.task.run(packageTask);
-  });
-
-  grunt.registerTask('reinstall', ['pkg', 'sdb:prepare', 'sdb:pushwgt', 'sdb:stop', 'sdb:uninstall', 'sdb:install', 'sdb:debug']);
-  grunt.registerTask('install', ['pkg', 'sdb:prepare', 'sdb:pushwgt', 'sdb:install', 'sdb:debug']);
+  grunt.registerTask('reinstall', [
+    'wgt',
+    'sdb:prepare',
+    'sdb:pushwgt',
+    'sdb:stop',
+    'sdb:uninstall',
+    'sdb:install',
+    'sdb:debug'
+  ]);
+  grunt.registerTask('install', ['wgt', 'sdb:prepare', 'sdb:pushwgt', 'sdb:install', 'sdb:debug']);
   grunt.registerTask('restart', ['sdb:stop', 'sdb:start']);
-  grunt.registerTask('default', 'dist');
+  grunt.registerTask('default', 'wgt');
 };
