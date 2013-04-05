@@ -1,6 +1,6 @@
 {
-  "name": "Sweetspot",
-  "version": "1.0.0",
+  "name": "SweetSpot",
+  "version": "1.0.1",
   "description": "Sweetspot: an implementation of Connect Four",
   "main": "app/main.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "type": "https",
     "url": "https://github.com/01org/webapps-sweetspot"
   },
-  "author": "",
+  "author": "Todd Brandt <todd.e.brandt@intel.com>",
   "license": "APL 2.0",
   "readmeFilename": "README.txt",
   "devDependencies": {
