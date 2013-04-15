@@ -50,8 +50,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: '.', src: ['app/audio/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/fonts/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/images/**'], dest: 'build/' },
-          { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' },
-          { expand: true, cwd: '.', src: ['app/_locales/**'], dest: 'build/' }
+          { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' }
         ]
       },
       wgt: {
@@ -65,7 +64,17 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/crx/' },
           { expand: true, cwd: '.', src: ['manifest.json'], dest: 'build/crx/' },
-          { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' }
+          { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' },
+          { expand: true, cwd: '.', src: ['app/_locales/**'], dest: 'build/' }
+        ]
+      },
+      sdk: {
+        files: [
+          { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app', src: ['js/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app', src: ['css/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/sdk/' },
+          { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/sdk/' }
         ]
       }
     },
@@ -84,6 +93,15 @@ module.exports = function (grunt) {
         version: '<%= packageInfo.version %>',
         files: 'build/wgt/**',
         stripPrefix: 'build/wgt/',
+        outDir: 'build',
+        suffix: '.wgt',
+        addGitCommitId: false
+      },
+      sdk: {
+        appName: '<%= packageInfo.name %>',
+        version: '<%= packageInfo.version %>',
+        files: 'build/sdk/**',
+        stripPrefix: 'build/sdk/',
         outDir: 'build',
         suffix: '.wgt',
         addGitCommitId: false
@@ -144,6 +162,13 @@ module.exports = function (grunt) {
   grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common', 'condense:dist']);
   grunt.registerTask('wgt', ['dist', 'copy:wgt', 'package:wgt']);
   grunt.registerTask('crx', ['dist', 'copy:crx']);
+
+  grunt.registerTask('sdk', [
+    'clean',
+    'copy:common',
+    'copy:sdk',
+    'package:sdk'
+  ]);
 
   grunt.registerTask('reinstall', [
     'wgt',
