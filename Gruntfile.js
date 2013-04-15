@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 
     clean: ['build'],
 
-    // minify and concat JS
+    // minify JS
     uglify: {
       dist: {
         files: {
@@ -45,53 +45,13 @@ module.exports = function (grunt) {
       common: {
         files: [
           { expand: true, cwd: '.', src: ['README.txt'], dest: 'build/app/' },
+          { expand: true, cwd: '.', src: ['LICENSE'], dest: 'build/app/' },
           { expand: true, cwd: '.', src: ['app/**.html'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/audio/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/fonts/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/images/**'], dest: 'build/' },
-          { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' },
-          { expand: true, cwd: '.', src: ['app/_locales/**'], dest: 'build/' }
-        ],
-        options: {
-          // this rewrites the <script> tag in the index.html file
-          // to point at the minified/concated js file all.js;
-          // and the stylesheet tags to point at all.css;
-          // it additionally strips out as much space and as many newlines
-          // as possible from HTML files (NB this may be dangerous if
-          // files are space-sensitive, but most HTML shouldn't be)
-          processContent: function (content) {
-            if (content.match(/DOCTYPE/)) {
-              // remove comments
-              content = content.replace(/.+\/\/.+?\n/g, '');
-              content = content.replace(/<!--[\s\S]+?-->/g, '');
-
-              // CSS
-              content = content.replace(/main\.css/, '!!!all.css!!!');
-              content = content.replace(/<link rel="stylesheet" href="[^\!]+?">\n/g, '');
-
-              // fix CSS resources
-              content = content.replace(/!!!/g, '');
-
-              // whitespace reduction
-              content = content.replace(/[ ]{2,}/g, ' ');
-              content = content.replace(/\n{2,}/g, '\n');
-            }
-
-            return content;
-          },
-
-          // if you have other resources which you don't want to have
-          // treated as text, add them here
-          processContentExclude: [
-            'app/images/**',
-            'app/audio/**',
-            'app/_locales/**',
-            'app/fonts/**',
-            'app/lib/**',
-            '*.png',
-            'README.txt'
-          ]
-        }
+          { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' }
+        ]
       },
       wgt: {
         files: [
@@ -104,8 +64,25 @@ module.exports = function (grunt) {
         files: [
           { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/crx/' },
           { expand: true, cwd: '.', src: ['manifest.json'], dest: 'build/crx/' },
-          { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' }
+          { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' },
+          { expand: true, cwd: 'app/_locales/', src: ['**'], dest: 'build/crx/_locales/' }
         ]
+      },
+      sdk: {
+        files: [
+          { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app', src: ['js/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app', src: ['css/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/sdk/' },
+          { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/sdk/' }
+        ]
+      }
+    },
+
+    condense: {
+      dist: {
+        file: 'build/app/index.html',
+        stylesheet: 'css/all.css'
       }
     },
 
@@ -116,6 +93,15 @@ module.exports = function (grunt) {
         version: '<%= packageInfo.version %>',
         files: 'build/wgt/**',
         stripPrefix: 'build/wgt/',
+        outDir: 'build',
+        suffix: '.wgt',
+        addGitCommitId: false
+      },
+      sdk: {
+        appName: '<%= packageInfo.name %>',
+        version: '<%= packageInfo.version %>',
+        files: 'build/sdk/**',
+        stripPrefix: 'build/sdk/',
         outDir: 'build',
         suffix: '.wgt',
         addGitCommitId: false
@@ -173,12 +159,18 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common']);
+  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common', 'condense:dist']);
   grunt.registerTask('wgt', ['dist', 'copy:wgt', 'package:wgt']);
   grunt.registerTask('crx', ['dist', 'copy:crx']);
 
-  grunt.registerTask('reinstall', [
-    'wgt',
+  grunt.registerTask('sdk', [
+    'clean',
+    'copy:common',
+    'copy:sdk',
+    'package:sdk'
+  ]);
+
+  grunt.registerTask('install', [
     'sdb:prepare',
     'sdb:pushwgt',
     'sdb:stop',
@@ -186,7 +178,10 @@ module.exports = function (grunt) {
     'sdb:install',
     'sdb:debug'
   ]);
-  grunt.registerTask('install', ['wgt', 'sdb:prepare', 'sdb:pushwgt', 'sdb:install', 'sdb:debug']);
+
+  grunt.registerTask('wgt-install', ['wgt', 'install']);
+  grunt.registerTask('sdk-install', ['sdk', 'install']);
+
   grunt.registerTask('restart', ['sdb:stop', 'sdb:start']);
   grunt.registerTask('default', 'wgt');
 };
