@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 
     clean: ['build'],
 
-    // minify and concat JS
+    // minify JS
     uglify: {
       dist: {
         files: {
@@ -52,47 +52,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: '.', src: ['app/images/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/_locales/**'], dest: 'build/' }
-        ],
-        options: {
-          // this rewrites the <script> tag in the index.html file
-          // to point at the minified/concated js file all.js;
-          // and the stylesheet tags to point at all.css;
-          // it additionally strips out as much space and as many newlines
-          // as possible from HTML files (NB this may be dangerous if
-          // files are space-sensitive, but most HTML shouldn't be)
-          processContent: function (content) {
-            if (content.match(/DOCTYPE/)) {
-              // remove comments
-              content = content.replace(/.+\/\/.+?\n/g, '');
-              content = content.replace(/<!--[\s\S]+?-->/g, '');
-
-              // CSS
-              content = content.replace(/main\.css/, '!!!all.css!!!');
-              content = content.replace(/<link rel="stylesheet" href="[^\!]+?">\n/g, '');
-
-              // fix CSS resources
-              content = content.replace(/!!!/g, '');
-
-              // whitespace reduction
-              content = content.replace(/[ ]{2,}/g, ' ');
-              content = content.replace(/\n{2,}/g, '\n');
-            }
-
-            return content;
-          },
-
-          // if you have other resources which you don't want to have
-          // treated as text, add them here
-          processContentExclude: [
-            'app/images/**',
-            'app/audio/**',
-            'app/_locales/**',
-            'app/fonts/**',
-            'app/lib/**',
-            '*.png',
-            'README.txt'
-          ]
-        }
+        ]
       },
       wgt: {
         files: [
@@ -107,6 +67,13 @@ module.exports = function (grunt) {
           { expand: true, cwd: '.', src: ['manifest.json'], dest: 'build/crx/' },
           { expand: true, cwd: '.', src: ['icon_*.png'], dest: 'build/crx/' }
         ]
+      }
+    },
+
+    condense: {
+      dist: {
+        file: 'build/app/index.html',
+        stylesheet: 'css/all.css'
       }
     },
 
@@ -174,7 +141,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common']);
+  grunt.registerTask('dist', ['clean', 'cssmin:dist', 'uglify:dist', 'copy:common', 'condense:dist']);
   grunt.registerTask('wgt', ['dist', 'copy:wgt', 'package:wgt']);
   grunt.registerTask('crx', ['dist', 'copy:crx']);
 
