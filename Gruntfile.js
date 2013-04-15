@@ -170,8 +170,7 @@ module.exports = function (grunt) {
     'package:sdk'
   ]);
 
-  grunt.registerTask('reinstall', [
-    'wgt',
+  grunt.registerTask('install', [
     'sdb:prepare',
     'sdb:pushwgt',
     'sdb:stop',
@@ -179,7 +178,10 @@ module.exports = function (grunt) {
     'sdb:install',
     'sdb:debug'
   ]);
-  grunt.registerTask('install', ['wgt', 'sdb:prepare', 'sdb:pushwgt', 'sdb:install', 'sdb:debug']);
+
+  grunt.registerTask('wgt-install', ['wgt', 'install']);
+  grunt.registerTask('sdk-install', ['sdk', 'install']);
+
   grunt.registerTask('restart', ['sdb:stop', 'sdb:start']);
   grunt.registerTask('default', 'wgt');
 };
