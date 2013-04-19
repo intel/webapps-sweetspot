@@ -10,24 +10,6 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="">
-    <script>
-    // figure out the "real" device width (screen.width);
-    var deviceWidth = screen.width;
-
-    // figure out the layout viewport width (document.documentElement.clientWidth)
-    var layoutViewportWidth = document.documentElement.clientWidth;
-
-    // work out the ratio between them
-    var scale = layoutViewportWidth / deviceWidth;
-
-    // for the viewport tag, set width=<device width> and
-    // scale=<layout viewport width> / <device width>
-    var content = 'width=' + deviceWidth + ', initial-scale=' + scale +
-                  ', maximum-scale=' + scale + ', minimum-scale=' + scale;
-
-    document.querySelector('[name=viewport]').setAttribute('content', content);
-    </script>
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/license.css">
     <link rel="stylesheet" href="css/help.css">
