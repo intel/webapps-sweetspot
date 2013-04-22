@@ -15,7 +15,7 @@ uninstall () {
 
   # uninstall
   if [ "x$APP_EXISTS" != "x" ] ; then
-    wrt-installer -ug $APP_ID
+    pkgcmd -u -q -t wgt -n $APP_ID
   else
     echo "app with ID $APP_ID is not installed" 1>&2
     exit 1
@@ -31,7 +31,7 @@ install () {
     exit 1
   fi
 
-  wrt-installer -i $PACKAGE
+  pkgcmd -i -q -t wgt -p $PACKAGE
 }
 
 # start a Tizen app
