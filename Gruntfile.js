@@ -57,7 +57,7 @@ module.exports = function (grunt) {
       wgt: {
         files: [
           { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/wgt/' },
-          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/wgt/' },
+          { expand: true, cwd: 'data/', src: ['config.xml'], dest: 'build/wgt/' },
           { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/wgt/' }
         ]
       },
@@ -74,7 +74,7 @@ module.exports = function (grunt) {
           { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/sdk/' },
           { expand: true, cwd: 'app', src: ['js/**'], dest: 'build/sdk/' },
           { expand: true, cwd: 'app', src: ['css/**'], dest: 'build/sdk/' },
-          { expand: true, cwd: '.', src: ['config.xml'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'data/', src: ['config.xml'], dest: 'build/sdk/' },
           { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/sdk/' }
         ]
       }

@@ -446,7 +446,7 @@ module.exports = function (grunt) {
     var actionDone = (subcommand === 'stop' ? 'stopped' : 'launched');
 
     getMeta(configXml, function (err, meta) {
-      var id = meta.uri;
+      var id = meta.id;
 
       var cmd = sdbCmd + ' shell "' + remoteScript +
                 ' ' + subcommand + ' ' + id + '"';
@@ -545,7 +545,7 @@ module.exports = function (grunt) {
    */
   grunt.registerMultiTask('sdb', 'use Tizen sdb', function () {
     this.data.sdbCmd = this.data.sdbCmd || 'sdb';
-    this.data.config = this.data.config || 'config.xml';
+    this.data.config = this.data.config || 'data/config.xml';
     var action = this.data.action;
 
     if (!action) {
