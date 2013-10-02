@@ -1,0 +1,17 @@
+{
+  "name": "webapps-sweetspot",
+  "version": "1.1.0",
+  "homepage": "https://github.com/01org/webapps-sweetspot",
+  "authors": [
+    "Max Waterman <max.waterman@intel.com>"
+  ],
+  "description": "4 piece alignment game for kids",
+  "main": "app/index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "intel-appframework": "~2.0.4",
+    "lato-black-font": "http://www.ffonts.net/Lato-Black.font.zip",
+    "yellow-tail-font": "http://www.ffonts.net/Yellowtail.font.zip"
+  }
+}

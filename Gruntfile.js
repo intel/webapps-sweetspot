@@ -19,7 +19,8 @@ module.exports = function (grunt) {
           'build/app/js/main.js': ['app/js/main.js'],
           'build/app/js/help.js': ['app/js/help.js'],
           'build/app/js/license.js': ['app/js/license.js'],
-          'build/app/js/run.js': ['app/js/run.js']
+          'build/app/js/run.js': ['app/js/run.js'],
+          'build/app/js/scaleBody.js': ['app/js/scaleBody.js']
         }
       }
     },

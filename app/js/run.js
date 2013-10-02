@@ -10,6 +10,8 @@
 $(document).ready(function() {
   var body = document.querySelector('body');
 
+  scaleBody(document.getElementsByTagName("body")[0], 720);
+
   var loadScript = function (url) {
     var elt = document.createElement('script');
     elt.setAttribute('src', url);
