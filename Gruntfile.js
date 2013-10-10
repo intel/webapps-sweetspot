@@ -72,8 +72,9 @@ module.exports = function (grunt) {
       sdk: {
         files: [
           { expand: true, cwd: 'build/app', src: ['**'], dest: 'build/sdk/' },
-          { expand: true, cwd: 'app', src: ['js/**'], dest: 'build/sdk/' },
-          { expand: true, cwd: 'app', src: ['css/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app/', src: ['js/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app/', src: ['css/**'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'app/', src: ['*.html'], dest: 'build/sdk/' },
           { expand: true, cwd: 'data/', src: ['config.xml'], dest: 'build/sdk/' },
           { expand: true, cwd: '.', src: ['icon_128.png'], dest: 'build/sdk/' }
         ]
