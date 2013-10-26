@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "app": {
+    "launch": {
+      "local_path": "index.html",
+	    "container":"panel",
+	    "width":1024,
+	    "height":600
+    }
+  },
+  "default_locale": "en_US",
+  "description": "<%= packageInfo.description %>",
+  "icons": {
+    "128": "icon_128.png",
+    "48": "icon_48.png",
+    "16": "icon_16.png"
+  },
+  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDwWMRzFhL0Rs0hfWaY8Fg1xd22IydehFmbj7G48NEgZZafotoAhNs9RKG6ji9STc6VUCkELozi66LfZMei6UEAtRUCSDTYYtel2YsP4BaJRh0+jXvhB8yJWZpr3dcn4Q50JAu72QUjgJ7UKVsSUuqSsxbrPVIhPLhyehSrn0iR6QIDAQAB",
+  "name": "<%= packageInfo.name %>",
+  "version": "<%= packageInfo.version %>",
+  "homepage_url" : "https://01.org/webapps/content/sweetspot",
+  "update_url" : "https://01.org/webapps/content/sweetspot/update.xml"
+}
