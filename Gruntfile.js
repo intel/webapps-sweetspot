@@ -152,9 +152,43 @@ module.exports = function (grunt) {
           { expand: true, cwd: 'app/', src: ['js/**'], dest: 'build/sdk/' },
           { expand: true, cwd: 'app/', src: ['css/**'], dest: 'build/sdk/' },
           { expand: true, cwd: 'app/', src: ['*.html'], dest: 'build/sdk/' },
-          { expand: true, cwd: 'platforms/tizen-wgt/', src: ['config.xml'], dest: 'build/sdk/' },
           { expand: true, cwd: '.', src: ['icon*.png'], dest: 'build/sdk/' }
         ]
+      },
+
+      sdk_platform:
+      {
+        files: [
+          { expand: true, cwd: 'platforms/tizen-sdk/', src: ['.project'], dest: 'build/sdk/' },
+          { expand: true, cwd: 'platforms/tizen-wgt/', src: ['config.xml'], dest: 'build/sdk/' }
+        ],
+
+        options:
+        {
+          processContent: function(content, srcpath)
+          {
+            return grunt.template.process(content);
+          }
+        }
+
+      },
+
+    },
+
+    htmlmin: {
+      dist: {
+        files: [
+          { expand: true, cwd: '.', src: ['app/*.html'], dest: 'build/' },
+          { expand: true, cwd: '.', src: ['app/html/*.html'], dest: 'build/' }
+        ],
+        options: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeCommentsFromCDATA: false,
+          removeCDATASectionsFromCDATA: false,
+          removeEmptyAttributes: true,
+          removeEmptyElements: false
+        }
       }
     },
 
@@ -182,7 +216,7 @@ module.exports = function (grunt) {
         files: 'build/sdk/**',
         stripPrefix: 'build/sdk/',
         outDir: 'build',
-        suffix: '.wgt',
+        suffix: '.zip',
         addGitCommitId: false
       }
     },
@@ -243,7 +277,7 @@ module.exports = function (grunt) {
     'clean',
     'copy:common',
     'copy:sdk',
-    'copy:wgt_config',
+    'copy:sdk_platform',
     'package:sdk'
   ]);
 
