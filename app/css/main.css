@@ -897,10 +897,10 @@ input:focus {
 
 @font-face {
     font-family: 'Yellowtail';
-    src: url('../lib/yellow-tail-font/Yellowtail-Regular.ttf');
+    src: url(../lib/yellow-tail-font/index.woff);
 }
 
 @font-face {
     font-family: 'Lato';
-    src: url('../lib/lato-black-font/lato/Lato-Black.ttf');
+    src: url(../lib/lato-black-font/index.woff);
 }
