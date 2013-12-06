@@ -1,6 +1,6 @@
 {
   "name": "SweetSpot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Sweetspot: an implementation of Connect Four",
   "main": "app/main.js",
   "scripts": {
