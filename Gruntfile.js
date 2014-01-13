@@ -71,8 +71,8 @@ module.exports = function (grunt) {
           { expand: true, cwd: '.', src: ['app/lib/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/audio/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/data/**'], dest: 'build/' },
-          { expand: true, cwd: '.', src: ['app/README.txt'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['LICENSE'], dest: 'build/app/' },
+          { expand: true, cwd: '.', src: ['app/README.txt'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/**.html'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/fonts/**'], dest: 'build/' },
           { expand: true, cwd: '.', src: ['app/images/**'], dest: 'build/' }
@@ -102,6 +102,17 @@ module.exports = function (grunt) {
       crx: {
         files: [
           { expand: true, cwd: 'build/app/', src: ['**'], dest: 'build/crx/' },
+          { expand: true, cwd: '.', src: ['icon*.png'], dest: 'build/crx/' },
+          { expand: true, cwd: 'app/_locales/', src: ['**'], dest: 'build/crx/_locales/' }
+        ]
+      },
+
+      crx_unpacked: {
+        files: [
+          { expand: true, cwd: 'build/app/', src: ['**'], dest: 'build/crx/' },
+          { expand: true, cwd: 'app/', src: ['js/**'], dest: 'build/crx/' },
+          { expand: true, cwd: 'app/', src: ['css/**'], dest: 'build/crx/' },
+          { expand: true, cwd: 'app/', src: ['*.html'], dest: 'build/crx/' },
           { expand: true, cwd: '.', src: ['icon*.png'], dest: 'build/crx/' },
           { expand: true, cwd: 'app/_locales/', src: ['**'], dest: 'build/crx/_locales/' }
         ]
@@ -216,8 +227,15 @@ module.exports = function (grunt) {
         files: 'build/sdk/**',
         stripPrefix: 'build/sdk/',
         outDir: 'build',
-        suffix: '.zip',
-        addGitCommitId: false
+        suffix: '.zip'
+      },
+      'crx_zip': {
+        appName: '<%= packageInfo.name %>-crx',
+        version: '<%= packageInfo.version %>',
+        files: 'build/crx/**',
+        stripPrefix: 'build/crx/',
+        outDir: 'build',
+        suffix: '.zip'
       }
     },
 
@@ -271,6 +289,13 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('crx', ['dist', 'copy:crx', 'copy:crx_manifest']);
+  grunt.registerTask('crx_unpacked', [
+    'clean',
+    'copy:common',
+    'copy:crx_unpacked',
+    'copy:crx_manifest',
+    'package:crx_zip'
+  ]);
   grunt.registerTask('wgt', ['dist', 'copy:wgt', 'copy:wgt_config', 'package:wgt']);
   grunt.registerTask('xpk', ['dist', 'copy:xpk', 'copy:xpk_manifest']);
   grunt.registerTask('sdk', [
