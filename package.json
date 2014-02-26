@@ -24,6 +24,9 @@
     "lodash": "~1.1.1",
     "xml2js": "~0.2.6",
     "grunt-tizen": "~0.1.2",
-    "grunt-release": "~0.6.0"
+    "grunt-release": "~0.6.0",
+    "crosswalk-apk-generator": "*",
+    "which": "~1.0.5",
+    "semver": "~2.2.1"
   }
 }
