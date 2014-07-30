@@ -10,7 +10,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "intel-appframework": "~2.0.4",
+    "intel-appframework": "~2.1.1",
     "lato-black-font": "http://themes.googleusercontent.com/static/fonts/lato/v6/BVtM30trf7q_jfqYeHfjtA.woff",
     "yellow-tail-font": "http://themes.googleusercontent.com/static/fonts/yellowtail/v3/GcIHC9QEwVkrA19LJU1qlBsxEYwM7FgeyaSgU71cLG0.woff"
   }
